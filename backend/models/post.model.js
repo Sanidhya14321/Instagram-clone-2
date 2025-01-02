@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const postschema=new mongoose.Schema({
+const postSchema=new mongoose.Schema({
     caption:{type:String,default:''},
     image:{type:String,required:true},
     author:{type:mongoose.Schema.Types.ObjectId, ref:'User', required:true},
@@ -8,4 +8,4 @@ const postschema=new mongoose.Schema({
     comments:[{type:mongoose.Schema.Types.ObjectId,ref:'Comment'}],
 })
 
-export const Post=mongoose.model('Post',postschema);
+export const Post=mongoose.model('Post',postSchema);
