@@ -102,3 +102,11 @@ export const getProfile=async(req,res)=>{
     console.log(error)
   }
 }
+
+export const editProfile=async(req,res)=>{
+  try {
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
