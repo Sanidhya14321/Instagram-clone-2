@@ -1,6 +1,8 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt  from  "jsonwebtoken"
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -105,6 +107,23 @@ export const getProfile=async(req,res)=>{
 
 export const editProfile=async(req,res)=>{
   try {
+    const  userId=req.id
+    const {bio,gender}=req.body;
+    const profilePicture=req.file
+    let cloudResponse;
+
+    if(profilePicture){
+      const fileUri=getDataUri(profilePicture)
+      cloudResponse=await cloudinary.uploader.upload(fileUri)
+    }
+
+    const user=await User.findById(userId)
+    if(!user){
+      return res.status(401).json({
+        message:"User not Found",
+        success:false
+      })
+    }
     
   } catch (error) {
     console.log(error)
