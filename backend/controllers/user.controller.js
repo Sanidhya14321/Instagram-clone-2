@@ -124,7 +124,79 @@ export const editProfile=async(req,res)=>{
         success:false
       })
     }
+    if(bio)user.bio=bio
+    if(gender)user.gender=gender
+    if(profilePicture)user.profilePicture=cloudResponse.secure_url
+
+    await user.save()
+
+    return res.status(200).json({
+      message:"Profile Updated",
+      success:true,
+      user
+    })
     
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getSuggestedUsers=async(req,res)=>{
+   try {
+    const suggestedUsers= await User.find({_id:{$ne:req.id}}).select("-password")
+    if(!suggestedUsers){
+      return res.status(400).json({
+        message:"Currently so not have any Users.",
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      users:suggestedUsers
+    })
+   } catch (error) {
+    console.log(error)
+   }
+}
+
+export const followOrUnfollow=async(req,res)=>{
+  try {
+    const follow=req.id
+    const follower=req.params.id
+    if(follow===follower){
+      return res.status(400).json({
+        message:"You cannot follow/unfollow yourself.",
+        success:false
+      })
+    }
+
+    const user=await User.findById(follow)
+    const targetUser=await User.findById(follower)
+
+    if(!user||!targetUser){
+      return res.status(400).json({
+        message:"User Not Found",
+        success:false
+      })
+    }
+
+    const isFollowing=User.following.includes(follower)
+    if(isFollowing){
+      User.updateOne({_id:follow},{$pull:{following:follower}}),
+      User.updateOne({_id:follower},{$pull:{following:follow}})
+      return res.status(200).json({
+        message:"Unfollowed Successfully",
+        success:true
+      })
+    }else{
+      await Promise.all([
+        User.updateOne({_id:follow},{$push:{following:follower}}),
+        User.updateOne({_id:follower},{$push:{following:follow}}),
+      ])
+      return res.status(200).json({
+        message:"Followed Successfully",
+        success:true
+      })
+    }
   } catch (error) {
     console.log(error)
   }
