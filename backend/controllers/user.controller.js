@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     });
     return res.status(201).json({
       message: "Account  Created  Successfully.",
-      success: false,
+      success: true,
     });
   } catch (error) {
     console.log(error);
@@ -73,7 +73,8 @@ export const login=async(req,res)=>{
         const token= await jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:'1d'})
         return res.cookie('token',token,{httpOnly:true,sameSite:'strict',maxAge:1*24*60*60*100}).json({
           message:`Welcome Back ${user.username}`,
-          success:true
+          success:true,
+          user
         })
 
     } catch (error) {
@@ -95,7 +96,7 @@ export const logout=async(_,res)=>{
 export const getProfile=async(req,res)=>{
   try {
     const userId=req.params.id
-    let user=await User.findById(userId)
+    let user=await User.findById(userId).select("-password")
     return res.status(200).json({
       user,
       success:true
@@ -117,7 +118,7 @@ export const editProfile=async(req,res)=>{
       cloudResponse=await cloudinary.uploader.upload(fileUri)
     }
 
-    const user=await User.findById(userId)
+    const user=await User.findById(userId).select("-password")
     if(!user){
       return res.status(401).json({
         message:"User not Found",
