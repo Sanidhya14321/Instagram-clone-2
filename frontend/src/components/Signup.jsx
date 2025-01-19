@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const Signup = () => {
@@ -17,6 +17,7 @@ const Signup = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
   const [loading, setLoading] = useState(false);
+  const navigate=useNavigate()
   const signupHandler = async (e) => {
     e.preventDefault();
     try {
@@ -30,6 +31,7 @@ const Signup = () => {
         }
       );
       if (res.data.success) {
+        navigate("/login")
         toast.success(res.data.message);
         setInput({
           username: "",
