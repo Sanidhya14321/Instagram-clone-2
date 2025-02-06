@@ -13,7 +13,7 @@ const useGetUserProfile = (userId) => {
         const fetchUserProfile = async () => {
             if (!userId) return;
             try {
-                const res = await axios.get(`http://localhost:8000/api/v1/user/${userId}/profile`, { 
+                const res = await axios.get(`https://instagram-clone-2-hokl.onrender.com/api/v1/user/${userId}/profile`, { 
                     withCredentials: true,
                     signal: controller.signal,
                 });

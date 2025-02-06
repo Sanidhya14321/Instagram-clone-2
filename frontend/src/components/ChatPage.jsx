@@ -21,7 +21,7 @@ const ChatPage = () => {
         if (!receiverId || !textMessage.trim()) return;
 
         try {
-            const res = await fetch(`http://localhost:8000/api/v1/message/send/${receiverId}`, {
+            const res = await fetch(`https://instagram-clone-2-hokl.onrender.com/api/v1/message/send/${receiverId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include', // Same as Axios `withCredentials: true`
